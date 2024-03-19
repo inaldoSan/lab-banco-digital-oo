@@ -15,6 +15,7 @@ public abstract class Conta implements IConta {
 		this.cliente = cliente;
 	}
 
+
 	@Override
 	public void sacar(double valor) {
 		saldo -= valor;
@@ -49,4 +50,33 @@ public abstract class Conta implements IConta {
 		System.out.println(String.format("Numero: %d", this.numero));
 		System.out.println(String.format("Saldo: %.2f", this.saldo));
 	}
+
+	protected abstract double getTaxaMensal();
+
+	public void aplicarTaxaMensal() {
+		double taxaMensal = getTaxaMensal();
+        saldo -= taxaMensal;
+        System.out.println(String.format("Taxa mensal de %.2f aplicada à conta.", taxaMensal));
+	}
+	
+	
+	private static final double TAXA_JUROS_EMPRESTIMO = 0.05; 
+	
+    public void pedirEmprestimo(double valor) {
+		double valorComJuros = valor * (1 + TAXA_JUROS_EMPRESTIMO);
+		
+        if (saldo >= valorComJuros) {
+			saldo -= valorComJuros;
+            System.out.println(String.format("Empréstimo de %.2f aprovado.", valor));
+        } else {
+			System.out.println("Saldo insuficiente para o empréstimo solicitado.");
+        }
+    }
+	
+	public void fecharConta() {
+		this.saldo = 0; 
+		this.cliente = null; 
+		System.out.println("Conta fechada com sucesso.");
+	}
+	
 }
